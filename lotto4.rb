@@ -1,7 +1,7 @@
 # Lotto 4
 require_relative("lotto4_head")
 tickets = []
-tickets = load_tickets
+tickets = load_tickets("pb")
 puts "Loaded #{tickets.length} records."
 
 def show_powerball(tickets)
