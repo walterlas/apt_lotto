@@ -1,7 +1,8 @@
 # Lotto 4
 require_relative("lotto4_head")
+current_game = "pb"
 tickets = []
-tickets = load_tickets("pb")
+tickets = load_tickets(current_game)
 puts "Loaded #{tickets.length} records."
 
 def show_powerball(tickets)
@@ -69,7 +70,7 @@ def start_matching(winners)
 end
 
 loop {
-  choice = print_menu
+  choice = print_menu(current_game)
   choice.strip!
   case choice
   when '1'
@@ -80,6 +81,8 @@ loop {
     start_matching(tickets)
   when '4'
     show_all(tickets)
+  when '5'
+    current_game = switch_game(current_game)
   when 'Q', 'q'
     break
   else

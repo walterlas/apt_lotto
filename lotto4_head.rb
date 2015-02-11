@@ -122,12 +122,23 @@ def find_matches(a,b)
   return(match_count)
 end
 # Print the menu and return choice
-def print_menu
-  puts "----------Main Menu----------"
+def print_menu(game)
+  puts "----------Main  Menu----------"
+  if game == "pb"
+    puts "PowerBall".center(30,' ')
+  else
+    puts "MegaMillions".center(30,' ')
+  end
+  puts "------------------------------"
   puts "01. Show Winning Number frequency"
   puts "02. Show PowerBall frequency"
   puts "03. Match your numbers to past winners!"
   puts "04. Show all numbers"
+  if game == "pb"
+    puts "05. Switch to MegaMillions"
+  elsif game == "mm"
+    puts "05. Switch to PowerBall"
+  end
   puts "Q to quit"
   print "> "
   inkey = gets
@@ -235,4 +246,12 @@ def number_frequency(tickets)
   end
   retval = number_count.join(" ")
   return(retval)
+end
+
+def switch_game(game)
+  if game == "pb"
+    game = "mm"
+  else
+    game = "pb"
+  end
 end
