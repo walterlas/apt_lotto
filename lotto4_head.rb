@@ -123,7 +123,7 @@ def find_matches(a,b)
 end
 # Print the menu and return choice
 def print_menu(game)
-  puts "----------Main  Menu----------"
+  puts "----------Main  Menu----------#{tickets.length}"
   if game == "pb"
     puts "PowerBall".center(30,' ')
   else
@@ -248,10 +248,13 @@ def number_frequency(tickets)
   return(retval)
 end
 
-def switch_game(game)
+def switch_game(game,tickets)
   if game == "pb"
     game = "mm"
   else
     game = "pb"
   end
+  tickets.clear
+  tickets = load_tickets(game)
+  return(tickets)
 end
