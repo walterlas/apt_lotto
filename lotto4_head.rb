@@ -203,10 +203,15 @@ def get_matches(numbers,tickets)
   return(results)
 end
 
-def pb_frequency(tickets)
+def pb_frequency(tickets,game)
   counter = 0
   work = []
-  pb_count = Array.new(37)
+  if game == "pb"
+    max = 35
+  else
+    max = 15
+  end
+  pb_count = Array.new(max)
   pb_val = 0
   value = 0
   
@@ -224,11 +229,16 @@ def pb_frequency(tickets)
   return(retval)
 end
 
-def number_frequency(tickets)
+def number_frequency(tickets,game)
   counter = 0
   work = []
   work2 = []
-  number_count = Array.new(76)
+  if game == "pb"
+    max = 59
+  else
+    max = 75
+  end
+  number_count = Array.new(max)
   num_val = 0
   while counter < tickets.length
     temp = tickets[counter].get_numbers

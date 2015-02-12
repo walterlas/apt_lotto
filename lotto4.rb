@@ -5,8 +5,8 @@ tickets = []
 tickets = load_tickets(current_game)
 puts "Loaded #{tickets.length} records."
 
-def show_powerball(tickets)
-  temp = pb_frequency(tickets)
+def show_powerball(tickets,game)
+  temp = pb_frequency(tickets,game)
   pb_count = temp.split(" ")
   max = pb_count.length
   loop = 0
@@ -49,8 +49,8 @@ end
 #                                                 loop+3,num_count[loop+2]
 #end
 
-def show_numbers(tickets)
-  temp = number_frequency(tickets)
+def show_numbers(tickets,game)
+  temp = number_frequency(tickets,game)
   num_count = temp.split(" ")
   max = num_count.length
   for c in 0..max
@@ -102,28 +102,11 @@ end
 loop {
   choice = print_menu(current_game)
   choice.strip!
-#  if choice == '1'
-#    show_numbers(tickets)
-#  elsif choice == '2'
-#    show_powerball(tickets)
-#  elsif choice == '3'
-#    start_matching(tickets)
-#  elsif choice == '4'
-#    show_all(tickets)
-#  elsif choice == '5'
-#    current_game = switch_game(current_game)
-#    tickets.clear
-#    tickets = load_tickets(current_game)
-#  elsif choice == 'Q' || choice == 'q'
-#    break
-#  else
-#    puts "#{choice} is invalid."
-#  end
   case choice
   when '1'
-    show_numbers(tickets)
+    show_numbers(tickets,current_game)
   when '2'
-    show_powerball(tickets)
+    show_powerball(tickets,current_game)
   when '3'
     start_matching(tickets)
   when '4'
