@@ -81,7 +81,7 @@ def load_tickets(game)
   if !File.exist?(filename)
     grab = `curl -o #{filename} #{arg_curl}`
   end
-  file = File.open("powerball.csv","r")
+  file = File.open(filename,"r")
   while !file.eof?
     lines[counter] = file.readline
     counter += 1
@@ -123,7 +123,7 @@ def find_matches(a,b)
 end
 # Print the menu and return choice
 def print_menu(game)
-  puts "----------Main  Menu----------#{tickets.length}"
+  puts "----------Main  Menu----------"
   if game == "pb"
     puts "PowerBall".center(30,' ')
   else
@@ -154,7 +154,7 @@ def get_user_numbers
     print "Number #{loop+1}: "
     user_numbers[loop] = gets
   end
-  print "Powerball:"
+  print "BonusBall:"
   user_numbers[5] = gets
   for loop in 0..5
     temp = user_numbers[loop]
@@ -228,7 +228,7 @@ def number_frequency(tickets)
   counter = 0
   work = []
   work2 = []
-  number_count = Array.new(60)
+  number_count = Array.new(76)
   num_val = 0
   while counter < tickets.length
     temp = tickets[counter].get_numbers
@@ -256,5 +256,5 @@ def switch_game(game,tickets)
   end
   tickets.clear
   tickets = load_tickets(game)
-  return(tickets)
+  return game, tickets
 end
