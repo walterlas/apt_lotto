@@ -1,12 +1,16 @@
-# Lotto v.04 [lotto4_head.rb]
+# Lotto v.05 [lotto4_head.rb]
+# Add in stuff for MegaMillions
 # Definitions
 # Max lottery number is 59, max PowerBall is 35
+# Max Lottery Number is 75, max MegaBall is 15
+# Location of MegaMillions.csv = http://txlottery.org/export/sites/lottery/Games/Mega_Millions/Winning_Numbers/megamillions.csv
+# Location of PowerBall.csv = http://txlottery.org/export/sites/lottery/Games/Powerball/Winning_Numbers/powerball.csv
 
 class Lottery
   @name =       ""
   @numbers =    []
-  @powerball =  0
-  @powerplay =  0
+  @powerball =  0 #MegaBall
+  @powerplay =  0 #Megaplier
   @date =       0
 
   attr_reader :name, :numbers, :powerball, :powerplay, :date
@@ -60,11 +64,24 @@ end
 # Definitions
 
 # Load a line of winner results and store it in an array
-def load_tickets
+def load_tickets(game)
+  lottery_base = "http://txlottery.org/export/sites/lottery/Games/"
+  megamillions = "Mega_Millions/Winning_Numbers/megamillions.csv"
+  powerball = "Powerball/Winning_Numbers/powerball.csv"
   tickets = []
+  if game == "mm"
+    filename = "megamillions.csv"
+    arg_curl = lottery_base + megamillions
+  elsif game == "pb"
+    filename = "powerball.csv"
+    arg_curl = lottery_base + powerball
+  end
   lines = []
   counter = 0
-  file = File.open("powerball.csv","r")
+  if !File.exist?(filename)
+    grab = `curl -o #{filename} #{arg_curl}`
+  end
+  file = File.open(filename,"r")
   while !file.eof?
     lines[counter] = file.readline
     counter += 1
@@ -105,12 +122,23 @@ def find_matches(a,b)
   return(match_count)
 end
 # Print the menu and return choice
-def print_menu
-  puts "----------Main Menu----------"
+def print_menu(game)
+  puts "----------Main  Menu----------"
+  if game == "pb"
+    puts "PowerBall".center(30,' ')
+  else
+    puts "MegaMillions".center(30,' ')
+  end
+  puts "------------------------------"
   puts "01. Show Winning Number frequency"
   puts "02. Show PowerBall frequency"
   puts "03. Match your numbers to past winners!"
   puts "04. Show all numbers"
+  if game == "pb"
+    puts "05. Switch to MegaMillions"
+  elsif game == "mm"
+    puts "05. Switch to PowerBall"
+  end
   puts "Q to quit"
   print "> "
   inkey = gets
@@ -126,7 +154,7 @@ def get_user_numbers
     print "Number #{loop+1}: "
     user_numbers[loop] = gets
   end
-  print "Powerball:"
+  print "BonusBall:"
   user_numbers[5] = gets
   for loop in 0..5
     temp = user_numbers[loop]
@@ -175,10 +203,15 @@ def get_matches(numbers,tickets)
   return(results)
 end
 
-def pb_frequency(tickets)
+def pb_frequency(tickets,game)
   counter = 0
   work = []
-  pb_count = Array.new(37)
+  if game == "pb"
+    max = 35
+  else
+    max = 15
+  end
+  pb_count = Array.new(max)
   pb_val = 0
   value = 0
   
@@ -196,11 +229,16 @@ def pb_frequency(tickets)
   return(retval)
 end
 
-def number_frequency(tickets)
+def number_frequency(tickets,game)
   counter = 0
   work = []
   work2 = []
-  number_count = Array.new(60)
+  if game == "pb"
+    max = 59
+  else
+    max = 75
+  end
+  number_count = Array.new(max)
   num_val = 0
   while counter < tickets.length
     temp = tickets[counter].get_numbers
@@ -218,4 +256,15 @@ def number_frequency(tickets)
   end
   retval = number_count.join(" ")
   return(retval)
+end
+
+def switch_game(game,tickets)
+  if game == "pb"
+    game = "mm"
+  else
+    game = "pb"
+  end
+  tickets.clear
+  tickets = load_tickets(game)
+  return game, tickets
 end

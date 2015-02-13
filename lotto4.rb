@@ -1,26 +1,59 @@
 # Lotto 4
 require_relative("lotto4_head")
+current_game = "pb"
 tickets = []
-tickets = load_tickets
+tickets = load_tickets(current_game)
 puts "Loaded #{tickets.length} records."
 
-def show_powerball(tickets)
-  temp = pb_frequency(tickets)
+def show_powerball(tickets,game)
+  temp = pb_frequency(tickets,game)
   pb_count = temp.split(" ")
+  max = pb_count.length
   loop = 0
-  puts "Powerball Frequency Chart"
+  puts "BonusBall Frequency Chart"
   begin
-    printf "%2d = %2d \t %2d = %2d \t %2d = %2d\n", loop+1, pb_count[loop],
-                                                    loop+2, pb_count[loop+1],
-                                                    loop+3, pb_count[loop+2]
-    loop += 3
-  end until loop >=37
+    printf "%2d = %2d \t",loop+1,pb_count[loop]
+    if (loop != 0) && (loop % 4 == 0)
+      print "\n"
+    end
+    loop += 1
+  end until loop > max-1
+  print "\n"
+#  begin
+#    printf "%2d = %2d \t %2d = %2d \t %2d = %2d\n", loop+1, pb_count[loop],
+#                                                    loop+2, pb_count[loop+1],
+#                                                    loop+3, pb_count[loop+2]
+#    loop += 3
+#  end until loop >=37
 end
 
-def show_numbers(tickets)
-  temp = number_frequency(tickets)
+#def show_numbers(tickets)
+#  temp = number_frequency(tickets)
+#  num_count = temp.split(" ")
+#  for c in 0..59
+#    if num_count[c].nil?
+#      num_count[c] = 0
+#    end
+#  end
+#  loop = 0
+#  puts "Number Frequency Chart"
+#  begin
+#    printf "%2d = %2d \t %2d = %2d \t %2d = %2d \t %2d = %2d\n", loop+1,num_count[loop],
+#                                                               loop+2,num_count[loop+1],
+#                                                               loop+3,num_count[loop+2],
+#                                                               loop+4,num_count[loop+3]
+#    loop += 4
+#  end until loop > 53
+#  printf "%2d = %2d \t %2d = %2d \t %2d = %2d\n",loop+1,num_count[loop],
+#                                                 loop+2,num_count[loop+1],
+#                                                 loop+3,num_count[loop+2]
+#end
+
+def show_numbers(tickets,game)
+  temp = number_frequency(tickets,game)
   num_count = temp.split(" ")
-  for c in 0..59
+  max = num_count.length
+  for c in 0..max
     if num_count[c].nil?
       num_count[c] = 0
     end
@@ -28,15 +61,13 @@ def show_numbers(tickets)
   loop = 0
   puts "Number Frequency Chart"
   begin
-    printf "%2d = %2d \t %2d = %2d \t %2d = %2d \t %2d = %2d\n", loop+1,num_count[loop],
-                                                               loop+2,num_count[loop+1],
-                                                               loop+3,num_count[loop+2],
-                                                               loop+4,num_count[loop+3]
-    loop += 4
-  end until loop > 53
-  printf "%2d = %2d \t %2d = %2d \t %2d = %2d\n",loop+1,num_count[loop],
-                                                 loop+2,num_count[loop+1],
-                                                 loop+3,num_count[loop+2]
+    printf "%2d = %2d \t",loop+1,num_count[loop]
+    if loop != 0 && loop % 4 == 0
+      print "\n"
+    end
+    loop += 1
+  end until loop > (max - 1)
+  print "\n"
 end
 
 def show_all(tickets)
@@ -69,17 +100,19 @@ def start_matching(winners)
 end
 
 loop {
-  choice = print_menu
+  choice = print_menu(current_game)
   choice.strip!
   case choice
   when '1'
-    show_numbers(tickets)
+    show_numbers(tickets,current_game)
   when '2'
-    show_powerball(tickets)
+    show_powerball(tickets,current_game)
   when '3'
     start_matching(tickets)
   when '4'
     show_all(tickets)
+  when '5'
+    current_game,tickets = switch_game(current_game,tickets)
   when 'Q', 'q'
     break
   else
